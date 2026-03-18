@@ -78,13 +78,13 @@ const ModalBackdrop = ({
   const getIconBackgroundColor = () => {
     switch (variant) {
       case 'success':
-        return colors.semantic.success;
+        return colors.ModalColor.success;
       case 'warning':
-        return colors.semantic.warningLight;
+        return colors.ModalColor.warning;
       case 'error':
-        return colors.semantic.errorLight;
+        return colors.ModalColor.error;
       default:
-        return colors.semantic.success;
+        return colors.primary[100];
     }
   };
 
@@ -95,7 +95,7 @@ const ModalBackdrop = ({
       case 'warning':
         return colors.tertiary[100];
       case 'error':
-        return colors.semantic.error;
+        return colors.alert.error;
       case 'info':
         return colors.primary[100];
       default:
@@ -189,7 +189,7 @@ const ModalBackdrop = ({
                 className="h-12 w-12 items-center justify-center rounded-full"
                 style={{ backgroundColor: getIconBackgroundColor() }}
               >
-                <Icon name={getIcon()} size={24} />
+                <Icon name={getIcon()} size={28} />
               </View>
             </View>
           )}

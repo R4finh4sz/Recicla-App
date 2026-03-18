@@ -172,7 +172,7 @@ const Input = <TFieldValues extends FieldValues>({
     flexGrow: 1,
     height: '100%',
     padding: 10,
-    fontFamily: fontFamily.roboto_regular,
+    fontFamily: fontFamily.montserrat_regular,
     fontSize: 16,
     color: colors.neutral[80],
     paddingRight: isPassword || icon ? 44 : undefined,
@@ -183,7 +183,7 @@ const Input = <TFieldValues extends FieldValues>({
     maxLength: length(),
     multiline: !!minHeight || multiline,
     placeholder,
-    placeholderTextColor: colors.neutral[60],
+    placeholderTextColor: '#8B8B8B',
     secureTextEntry: passwordHidden,
     style: inputStyle,
     textAlignVertical: 'top',
@@ -201,7 +201,7 @@ const Input = <TFieldValues extends FieldValues>({
       {...containerProps}
     >
       {label && (
-        <Text className="font-roboto_regular text-base text-neutral-80">
+        <Text className="font-montserrat_regular text-base text-[#454545]">
           {label}
         </Text>
       )}

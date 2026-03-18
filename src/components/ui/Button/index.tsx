@@ -94,7 +94,7 @@ const Button = ({
 
   return (
     <AnimatedPressable
-      className="flex-row items-center justify-center gap-3 overflow-hidden rounded-xl border p-1"
+      className="flex-row items-center justify-center gap-3 overflow-hidden rounded-lg border p-1"
       disabled={disabled || isLoading || loading}
       layout={LinearTransition}
       style={{
@@ -111,7 +111,7 @@ const Button = ({
       )}
 
       <Text
-        className={textClassName || 'font-roboto_bold text-base'}
+        className={textClassName || 'font-montserrat_semibold text-base'}
         style={{
           color: handleTextColor(),
         }}

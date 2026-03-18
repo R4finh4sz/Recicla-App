@@ -9,6 +9,13 @@ export const colors = {
     20: '#DFF6E9',
   },
 
+  ModalColor: {
+    success: '#5B9B68',
+    warning: '#E3B757',
+    error: '#F6C6C2',
+    info: '#5B9B68',
+  },
+
   secondary: {
     100: '#A8DC20',
     80: '#8DB243',
