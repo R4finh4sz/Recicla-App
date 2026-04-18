@@ -15,6 +15,7 @@ export const PersonalInfoSchema = z.object({
 export const AddressSchema = z.object({
   cep: z.string().regex(/^\d{5}-?\d{3}$/, 'Informe um CEP válido'),
   endereco: z.string().min(1, 'Informe seu endereço'),
+  numero: z.string().min(1, 'Informe o número'),
   complemento: z.string().optional(),
   cidade: z.string().min(1, 'Informe sua cidade'),
   estado: z

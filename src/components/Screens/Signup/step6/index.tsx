@@ -15,11 +15,11 @@ export const SignupStep6 = () => {
     >
       <View className="flex-1 items-center justify-between px-4 pt-10">
         <View className="w-full items-center">
-          <Text className="text-center font-montserrat_bold text-[22px] text-primary-100">
+          <Text className="text-center font-poppins_bold text-[22px] text-primary-100">
             Cadastro enviado{'\n'}com sucesso!
           </Text>
 
-          <Text className="mt-2 text-center font-montserrat_regular text-sm leading-7 text-neutral-80">
+          <Text className="mt-2 text-center font-poppins_regular text-sm leading-7 text-neutral-80">
             Seu perfil passará por uma análise e poderá ser aprovado em até 48
             horas. Você será notificado assim que estiver tudo liberado.
           </Text>

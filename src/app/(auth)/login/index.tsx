@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { View } from 'react-native';
@@ -14,15 +15,16 @@ import { LoginForm, LoginSchema } from '@/validation/login.validation';
 
 const Login = () => {
   const { login, logout } = useAuth();
+  const router = useRouter();
   const { openErrorModal } = useErrorModal();
   const insets = useSafeAreaInsets();
 
   const { control, handleSubmit } = useForm<LoginForm>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      identifier: __DEV__ ? 'teste@gmail.com' : '',
-      password: __DEV__ ? '123456' : '',
-      requestRefresh: false,
+      email: __DEV__ ? 'spgustavorisio@gmail.com' : '',
+      password: __DEV__ ? 'Senha@1234' : '',
+      rememberMe: false,
     },
   });
 
@@ -33,6 +35,7 @@ const Login = () => {
   const onSubmit: SubmitHandler<LoginForm> = async data => {
     try {
       await login(data);
+      router.replace('/(main)/home');
     } catch {
       openErrorModal({
         title: 'Dados incorretos',
@@ -49,6 +52,7 @@ const Login = () => {
         className="flex-1 bg-white"
         contentContainerStyle={{
           paddingBottom: Math.max(insets.bottom + 10),
+          paddingTop: Math.max(insets.top + 10),
           flexGrow: 1,
         }}
         keyboardShouldPersistTaps="handled"
@@ -58,10 +62,7 @@ const Login = () => {
         <View className="px-4">
           <LoginIntro />
 
-          <LoginFields
-            control={control as any}
-            onSubmit={handleSubmit(onSubmit)}
-          />
+          <LoginFields control={control} onSubmit={handleSubmit(onSubmit)} />
         </View>
       </KeyboardAwareScrollView>
     </>

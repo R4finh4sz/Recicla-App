@@ -172,7 +172,7 @@ const Input = <TFieldValues extends FieldValues>({
     flexGrow: 1,
     height: '100%',
     padding: 10,
-    fontFamily: fontFamily.montserrat_regular,
+    fontFamily: fontFamily.poppins_regular,
     fontSize: 16,
     color: colors.neutral[80],
     paddingRight: isPassword || icon ? 44 : undefined,
@@ -201,7 +201,7 @@ const Input = <TFieldValues extends FieldValues>({
       {...containerProps}
     >
       {label && (
-        <Text className="font-montserrat_regular text-base text-[#454545]">
+        <Text className="font-poppins_regular text-base text-[#454545]">
           {label}
         </Text>
       )}

@@ -52,7 +52,7 @@ export const colors = {
       secondary: '#CEE8E1',
     },
     error: {
-      primary: '#D25151',
+      primary: '#E14232',
       secondary: '#F1CACA',
     },
     warning: {

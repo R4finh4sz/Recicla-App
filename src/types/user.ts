@@ -8,9 +8,11 @@ export type TLoginUser = {
 };
 
 export type TLoginResponse = {
-  jwt: string;
-  user: TLoginUser;
-  refreshToken: string;
+  jwt?: string;
+  accessToken?: string;
+  token?: string;
+  user?: TLoginUser;
+  refreshToken?: string;
 };
 
 export type TUser = {

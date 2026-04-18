@@ -3,6 +3,10 @@ export const queryKeys = {
     me: ['user'] as const,
   },
 
+  terms: {
+    active: ['terms', 'active'] as const,
+  },
+
   zipCode: {
     all: ['zip-codes'] as const,
     details: (id: string) => [...queryKeys.zipCode.all, 'details', id] as const,

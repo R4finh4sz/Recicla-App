@@ -19,7 +19,7 @@ export const LoginFields = ({ control, onSubmit }: Props) => {
         control={control}
         keyboardType="email-address"
         label="E-mail"
-        name="identifier"
+        name="email"
         placeholder="Digite seu e-mail"
       />
 

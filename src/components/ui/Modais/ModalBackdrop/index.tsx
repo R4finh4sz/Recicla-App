@@ -95,7 +95,7 @@ const ModalBackdrop = ({
       case 'warning':
         return colors.tertiary[100];
       case 'error':
-        return colors.alert.error;
+        return colors.alert.error.primary;
       case 'info':
         return colors.primary[100];
       default:
@@ -143,7 +143,7 @@ const ModalBackdrop = ({
           {message.split('\n').map((line, index) => (
             <Text
               key={index}
-              className="text-center font-regular text-base text-black"
+              className="font-regular text-center text-base text-black"
               style={{
                 marginBottom: index < message.split('\n').length - 1 ? 4 : 0,
               }}
@@ -161,7 +161,7 @@ const ModalBackdrop = ({
           {message.map((line, index) => (
             <Text
               key={index}
-              className="text-center font-regular text-base text-black"
+              className="font-regular text-center text-base text-black"
               style={{ marginBottom: index < message.length - 1 ? 4 : 0 }}
             >
               {line}
@@ -197,7 +197,7 @@ const ModalBackdrop = ({
           <View className="items-center">
             {title && (
               <Text
-                className={`mt-6 font-semibold text-lg text-black ${titleClassName}`}
+                className={`mt-6 text-lg font-semibold text-black ${titleClassName}`}
               >
                 {title}
               </Text>

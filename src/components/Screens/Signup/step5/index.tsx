@@ -9,15 +9,24 @@ import { Button, Image, KeyboardAwareScrollView } from '@/components/ui';
 import { BackButton } from '@/components/ui/BackButton';
 import Checkbox from '@/components/ui/Checkbox';
 import { CustomScrollIndicator } from '@/components/ui/CustomScrollIndicator';
+import { useFetchActiveTerms } from '@/hooks/api/useAuthApi';
 import { TermsForm, TermsSchema } from '@/validation/signup.validation';
 
 type Step5Props = {
   initialData: Partial<SignupPayload>;
   onNext: (data: TermsForm) => void;
   onBack: () => void;
+  isSubmitting?: boolean;
 };
 
-export const SignupStep5 = ({ initialData, onNext, onBack }: Step5Props) => {
+export const SignupStep5 = ({
+  initialData,
+  onNext,
+  onBack,
+  isSubmitting = false,
+}: Step5Props) => {
+  const { data: termsData, isPending } = useFetchActiveTerms();
+
   const {
     control,
     handleSubmit,
@@ -34,6 +43,10 @@ export const SignupStep5 = ({ initialData, onNext, onBack }: Step5Props) => {
   const [dimensions, setDimensions] = useState({ container: 0, content: 0 });
   const canScroll = dimensions.content > dimensions.container;
   const scrollRange = Math.max(0, dimensions.content - dimensions.container);
+  const termsContent = isPending
+    ? 'Carregando termos...'
+    : termsData?.data?.content ||
+      'Não foi possível carregar os termos no momento.';
 
   const insets = useSafeAreaInsets();
 
@@ -53,11 +66,11 @@ export const SignupStep5 = ({ initialData, onNext, onBack }: Step5Props) => {
           style={{ width: '70%', height: 150 }}
         />
 
-        <Text className="mt-[-20px] text-center font-montserrat_bold text-[22px] text-primary-100">
+        <Text className="mt-[-20px] text-center font-poppins_bold text-[22px] text-primary-100">
           Cadastro
         </Text>
 
-        <Text className="mb-6 mt-2 text-center font-montserrat_regular text-sm text-neutral-80">
+        <Text className="mb-6 mt-2 text-center font-poppins_regular text-sm text-neutral-80">
           Para concluir seu cadastro, é necessário concordar com nossos Termos
           de Uso e Política de Privacidade.
         </Text>
@@ -83,21 +96,8 @@ export const SignupStep5 = ({ initialData, onNext, onBack }: Step5Props) => {
               { useNativeDriver: false },
             )}
           >
-            <Text className="pb-4 font-montserrat_regular text-sm text-neutral-80">
-              Lorem ipsum dolor sit amet consectetur. Iaculis in lobortis
-              venenatis pretium adipiscing sit. Potenti nulla dictumst pretium
-              semper vitae aliquet lacinia praesent. Donec eget auctor sodales
-              nec. Sem ornare adipiscing odio integer eu. Arcu vel quis risus ut
-              in. Integer rutrum adipiscing habitasse elementum tempor volutpat.
-              Convallis enim felis nascetur viverra dictum potenti et gravida.
-              Neque pretium sem amet eget. Enim proin semper morbi tristique
-              consequat ac mi ullamcorper. Quisque ultrices turpis vitae risus
-              arcu. Elementum luctus quam a purus lacinia. Volutpat faucibus
-              nunc massa elit.
-              {'\n\n'}
-              Potenti nulla dictumst pretium semper vitae aliquet lacinia
-              praesent. Donec eget auctor sodales nec. Sem ornare adipiscing
-              odio integer eu. Arcu vel quis risus ut in.
+            <Text className="pb-4 font-poppins_regular text-sm text-neutral-80">
+              {termsContent}
             </Text>
           </Animated.ScrollView>
 
@@ -119,7 +119,7 @@ export const SignupStep5 = ({ initialData, onNext, onBack }: Step5Props) => {
               <Checkbox
                 checked={value}
                 linkText="Termos de Uso e Política de Privacidade"
-                onLinkPress={() => { }}
+                onLinkPress={() => {}}
                 onToggle={onChange}
               />
             )}
@@ -128,7 +128,8 @@ export const SignupStep5 = ({ initialData, onNext, onBack }: Step5Props) => {
 
         <View className="mt-4 w-full items-center">
           <Button
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
+            isLoading={isSubmitting}
             text="Continuar"
             textClassName="text-base font-roboto_bold p-1"
             width="100%"

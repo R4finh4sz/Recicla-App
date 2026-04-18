@@ -20,7 +20,7 @@ export const BackButton = ({ Title, Onpress }: BackButtonProps) => {
     >
       <BackIcon />
 
-      <Text className="font-montserrat_medium text-base text-primary-100">
+      <Text className="font-poppins_medium text-base text-primary-100">
         {Title}
       </Text>
     </Pressable>

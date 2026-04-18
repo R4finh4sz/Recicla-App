@@ -21,11 +21,11 @@ export const SignupStep1 = ({ onNext, onBack }: Step1Props) => {
       </View>
 
       <View className="flex-1 items-center px-4 pb-8 pt-5">
-        <Text className="text-center font-montserrat_bold text-[22px] text-primary-100">
+        <Text className="text-center font-poppins_bold text-[22px] text-primary-100">
           Vamos começar!
         </Text>
 
-        <Text className="mt-2 text-center font-montserrat_regular text-sm text-neutral-80">
+        <Text className="mt-2 text-center font-poppins_regular text-sm text-neutral-80">
           Cadastre-se para ter acesso completo às funcionalidades.
         </Text>
 

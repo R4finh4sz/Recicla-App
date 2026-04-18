@@ -7,7 +7,8 @@ export const useZipCode = (zipCode: string) => {
   const normalizedZipCode = zipCode.replace(/\D/g, '');
 
   return useQuery({
-    queryKey: queryKeys.zipCode.all,
+    queryKey: queryKeys.zipCode.details(normalizedZipCode),
     queryFn: () => zipCodeService.getAddress(normalizedZipCode),
+    enabled: normalizedZipCode.length === 8,
   });
 };

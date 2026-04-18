@@ -12,4 +12,5 @@ export type TViaCEPResponse = {
   gia: string;
   ddd: string;
   siafi: string;
+  erro?: boolean;
 };

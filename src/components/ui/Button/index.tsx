@@ -47,8 +47,9 @@ const Button = ({
   withShadow = false,
   shadowVariant = 'default',
   disabled,
+  className,
   ...props
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<Props & { className?: string }>) => {
   const { executeWithDelay, isLoading: loading } = useDisableDelay();
 
   const handleColor = () => {
@@ -94,7 +95,7 @@ const Button = ({
 
   return (
     <AnimatedPressable
-      className="flex-row items-center justify-center gap-3 overflow-hidden rounded-lg border p-1"
+      className={`flex-row items-center justify-center gap-3 overflow-hidden rounded-lg border p-2 ${className}`}
       disabled={disabled || isLoading || loading}
       layout={LinearTransition}
       style={{
@@ -111,7 +112,7 @@ const Button = ({
       )}
 
       <Text
-        className={textClassName || 'font-montserrat_semibold text-base'}
+        className={textClassName || 'font-poppins_semibold text-base'}
         style={{
           color: handleTextColor(),
         }}

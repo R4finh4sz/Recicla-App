@@ -9,6 +9,25 @@ export const useLogin = () => {
   });
 };
 
+export const useRegisterMunicipe = () => {
+  return useMutation({
+    mutationFn: authService.registerMunicipe,
+  });
+};
+
+export const useFetchActiveTerms = () => {
+  return useQuery({
+    queryKey: queryKeys.terms.active,
+    queryFn: authService.fetchActiveTerms,
+  });
+};
+
+export const useAcceptTermsPublic = () => {
+  return useMutation({
+    mutationFn: authService.acceptTermsPublic,
+  });
+};
+
 export const useRefreshAccessToken = () => {
   return useMutation({
     mutationFn: authService.refreshAccessToken,

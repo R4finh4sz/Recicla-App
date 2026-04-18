@@ -36,25 +36,64 @@ export const AuthProvider = ({
   const [user, setUser] = useState<TUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const login = async (form: LoginForm) => {
-    if (form.identifier !== 'teste@gmail.com') {
-      throw new Error('E-mail inválido');
-    }
+  const mapUser = (payload: unknown): TUser => {
+    const user = (payload || {}) as Record<string, unknown>;
 
-    if (form.password !== '123456') {
-      throw new Error('Senha incorreta');
-    }
-
-    const fakeUser: TUser = {
-      id: 1,
-      documentId: 'doc123',
-      name: 'Usuário Teste',
+    return {
+      id: Number(user.id || 0),
+      documentId: String(user.documentId || user.document || ''),
+      name: String(
+        user.name || user.fullName || user.username || user.email || '',
+      ),
     };
+  };
 
-    await setItemAsync('accessToken', 'token');
-    await setItemAsync('refreshToken', 'refresh');
+  const getLoginPayload = (payload: unknown): Record<string, unknown> => {
+    const response = (payload || {}) as Record<string, unknown>;
+    const nestedData = response.data;
 
-    setUser(fakeUser);
+    if (nestedData && typeof nestedData === 'object') {
+      return nestedData as Record<string, unknown>;
+    }
+
+    return response;
+  };
+
+  const getAccessToken = (payload: unknown): string => {
+    const data = (payload || {}) as Record<string, unknown>;
+    const token = data.accessToken || data.jwt || data.token;
+
+    return typeof token === 'string' ? token : '';
+  };
+
+  const login = async (form: LoginForm) => {
+    // const response = await authService.login(form);
+    // const payload = getLoginPayload(response);
+
+    // const accessToken = getAccessToken(payload);
+
+    // if (!accessToken) {
+    //   throw new Error('Token de acesso não retornado pela API');
+    // }
+
+    // await setItemAsync('accessToken', accessToken);
+
+    // if (payload.user) {
+    //   setUser(mapUser(payload.user));
+    //   return;
+    // }
+
+    // const me = await authService.fetchUser();
+    // setUser(mapUser(me));
+
+    // --- MOCK LOGIN (Temporário) ---
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setUser({
+      id: 1,
+      documentId: 'mock-doc-id',
+      name: 'Usuário Mock',
+    });
+    await setItemAsync('accessToken', 'mock-token');
   };
 
   const logout = async (isDelete = true) => {
@@ -63,7 +102,6 @@ export const AuthProvider = ({
     if (isDelete) {
       try {
         await deleteItemAsync('accessToken');
-        await deleteItemAsync('refreshToken');
       } catch (error) {
         console.error('Erro ao deletar tokens:', error);
       }
@@ -76,44 +114,10 @@ export const AuthProvider = ({
     return;
   };
 
-  const refreshAccessToken = (): Promise<string | null> => {
-    // Se tiver token, busca o usuário (aqui você faria a chamada real da API)
-    // if (accessToken === 'token') {
-    //   const fakeUser: TUser = {
-    //     id: 1,
-    //     documentId: 'doc123',
-    //     name: 'Usuário Teste',
-    //   };
-    //   setUser(fakeUser);
-    //   return accessToken;
-    // }
-
-    return Promise.resolve(null);
-  };
-
   useEffect(() => {
-    let mounted = true;
-
-    const getToken = async () => {
-      try {
-        await refreshAccessToken();
-      } catch (err) {
-        console.error('Auth error:', err);
-        setUser(null);
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    };
-
     if (isAppReady) {
-      getToken();
+      setLoading(false);
     }
-
-    return () => {
-      mounted = false;
-    };
   }, [isAppReady]);
 
   useEffect(() => {

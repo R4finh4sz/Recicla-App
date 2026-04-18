@@ -1,30 +1,30 @@
 export const fontFamily = {
-  montserrat_thin: 'Montserrat_100Thin',
-  montserrat_thin_italic: 'Montserrat_100Thin_Italic',
+  poppins_thin: 'Poppins_100Thin',
+  poppins_thin_italic: 'Poppins_100Thin_Italic',
 
-  montserrat_extralight: 'Montserrat_200ExtraLight',
-  montserrat_extralight_italic: 'Montserrat_200ExtraLight_Italic',
+  poppins_extralight: 'Poppins_200ExtraLight',
+  poppins_extralight_italic: 'Poppins_200ExtraLight_Italic',
 
-  montserrat_light: 'Montserrat_300Light',
-  montserrat_light_italic: 'Montserrat_300Light_Italic',
+  poppins_light: 'Poppins_300Light',
+  poppins_light_italic: 'Poppins_300Light_Italic',
 
-  montserrat_regular: 'Montserrat_400Regular',
-  montserrat_regular_italic: 'Montserrat_400Regular_Italic',
+  poppins_regular: 'Poppins_400Regular',
+  poppins_regular_italic: 'Poppins_400Regular_Italic',
 
-  montserrat_medium: 'Montserrat_500Medium',
-  montserrat_medium_italic: 'Montserrat_500Medium_Italic',
+  poppins_medium: 'Poppins_500Medium',
+  poppins_medium_italic: 'Poppins_500Medium_Italic',
 
-  montserrat_semibold: 'Montserrat_600SemiBold',
-  montserrat_semibold_italic: 'Montserrat_600SemiBold_Italic',
+  poppins_semibold: 'Poppins_600SemiBold',
+  poppins_semibold_italic: 'Poppins_600SemiBold_Italic',
 
-  montserrat_bold: 'Montserrat_700Bold',
-  montserrat_bold_italic: 'Montserrat_700Bold_Italic',
+  poppins_bold: 'Poppins_700Bold',
+  poppins_bold_italic: 'Poppins_700Bold_Italic',
 
-  montserrat_extrabold: 'Montserrat_800ExtraBold',
-  montserrat_extrabold_italic: 'Montserrat_800ExtraBold_Italic',
+  poppins_extrabold: 'Poppins_800ExtraBold',
+  poppins_extrabold_italic: 'Poppins_800ExtraBold_Italic',
 
-  montserrat_black: 'Montserrat_900Black',
-  montserrat_black_italic: 'Montserrat_900Black_Italic',
+  poppins_black: 'Poppins_900Black',
+  poppins_black_italic: 'Poppins_900Black_Italic',
 } as const;
 
 export type FontT = (typeof fontFamily)[keyof typeof fontFamily];

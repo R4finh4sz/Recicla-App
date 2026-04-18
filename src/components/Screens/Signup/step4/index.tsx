@@ -57,11 +57,11 @@ export const SignupStep4 = ({ initialData, onNext, onBack }: Step4Props) => {
           style={{ width: '70%', height: 150 }}
         />
 
-        <Text className="mt-[-20px] text-center font-montserrat_bold text-[22px] text-primary-100">
+        <Text className="mt-[-20px] text-center font-poppins_bold text-[22px] text-primary-100">
           Cadastro
         </Text>
 
-        <Text className="mb-10 mt-2 text-center font-montserrat_regular text-sm text-neutral-80">
+        <Text className="mb-10 mt-2 text-center font-poppins_regular text-sm text-neutral-80">
           Estamos quase lá! Informe seus dados de acesso para concluir seu
           cadastro com segurança.
         </Text>
