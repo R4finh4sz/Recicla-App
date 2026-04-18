@@ -1,44 +1,56 @@
 import { useRouter } from 'expo-router';
-import { Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { Bell } from 'lucide-react-native';
+import { ScrollView, Text, View } from 'react-native';
 
-import Button from '@/components/ui/Button';
-import Image from '@/components/ui/Image';
+import { HomeBanner } from '@/components/Screens/Home/Banner';
+import { ExchangesCarousel } from '@/components/Screens/Home/ExchangesCarousel';
+import { RecentTransactions } from '@/components/Screens/Home/RecentTransactions';
+import { WalletCard } from '@/components/Screens/Home/WalletCard';
+import { Container, Header, Pressable } from '@/components/ui';
 import { useAuth } from '@/contexts/useAuth';
-import { useDefaultModal } from '@/store/defaultModalStore';
 
 const Home = () => {
-  const { user, logout } = useAuth();
-  const { openModal } = useDefaultModal();
+  const { user } = useAuth();
   const router = useRouter();
 
-  const handlePress = () => {
-    openModal({
-      message: 'Você deseja sair?',
-      cancelText: 'Cancelar',
-      confirmText: 'Sair',
-      onConfirm: () => {
-        logout();
-        router.replace('/(auth)/login');
-      },
-      title: 'teste',
-    });
-  };
-
   return (
-    <View className="flex-1 items-center justify-center gap-20 p-6">
-      <Image
-        source="https://placehold.co/800x800"
-        style={{ width: 200, height: 200 }}
-      />
+    <Container className="bg-white" useSafeArea={false} withPadding={false}>
+      <StatusBar translucent style="light" />
 
-      <View className="w-full">
-        <Text className="text-base text-neutral-60">Bem Vindo</Text>
+      <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+        <Header
+          leftComponent={
+            <Text className="font-poppins_bold text-xl text-white">
+              Olá {user?.name?.split(' ')[0] || 'Usuário'}
+            </Text>
+          }
+          rightComponent={
+            <Pressable onPress={() => router.push('/(main)/notifications')}>
+              <View className="h-10 w-10 items-center justify-center rounded-full bg-white/20">
+                <Bell color="white" size={24} />
 
-        <Text className="text-lg">{user?.name}</Text>
-      </View>
+                <View className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border-2 border-primary-100 bg-red-500" />
+              </View>
+            </Pressable>
+          }
+        />
 
-      <Button text="Sair" onPress={handlePress} />
-    </View>
+        <HomeBanner />
+
+        <View className="flex-1 px-4">
+          <WalletCard />
+
+          <View className="mt-8">
+            <ExchangesCarousel />
+          </View>
+
+          <View className="mt-8 pb-10">
+            <RecentTransactions />
+          </View>
+        </View>
+      </ScrollView>
+    </Container>
   );
 };
 
