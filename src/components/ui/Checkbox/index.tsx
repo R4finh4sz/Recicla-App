@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { colors } from '@/global/colors';
 
@@ -10,11 +10,9 @@ import Pressable from '../Pressable';
 type DefaultCheckboxProps = {
   checked: boolean;
   onToggle: (value: boolean) => void;
-  onLinkPress: () => void;
-  linkText?: string;
+  children: ReactNode;
   control?: never;
   name?: never;
-  children?: never;
 };
 
 type ControlledCheckboxProps<T extends FieldValues> = {
@@ -23,8 +21,6 @@ type ControlledCheckboxProps<T extends FieldValues> = {
   children: ReactNode;
   checked?: never;
   onToggle?: never;
-  onLinkPress?: never;
-  linkText?: never;
 };
 
 type CheckboxProps<T extends FieldValues = FieldValues> =
@@ -66,20 +62,15 @@ const Checkbox = <T extends FieldValues = FieldValues>(
     );
   }
 
-  const {
-    checked,
-    onToggle,
-    onLinkPress,
-    linkText = 'Termos de Uso e Política de Privacidade',
-  } = props;
+  const { checked, onToggle, children } = props;
 
   return (
     <Pressable
-      className="mb-4 flex-row items-start gap-2"
+      className="flex-row items-center gap-2"
       onPress={() => onToggle(!checked)}
     >
       <View
-        className="mt-1 h-6 w-6 shrink-0 items-center justify-center rounded-md"
+        className="h-6 w-6 shrink-0 items-center justify-center rounded-md"
         style={{
           backgroundColor: checked ? colors.tertiary[100] : undefined,
           borderColor: colors.tertiary[100],
@@ -89,20 +80,7 @@ const Checkbox = <T extends FieldValues = FieldValues>(
         {checked && <Icon color={colors.white} name="CheckIcon" size={14} />}
       </View>
 
-      <View className="flex-1 pt-1">
-        <Text className="font-regular text-base text-neutral-100">
-          Li e concordo com os{' '}
-          <Text
-            className="font-regular text-base text-[#FF9D00]"
-            onPress={e => {
-              e.stopPropagation();
-              onLinkPress();
-            }}
-          >
-            {linkText}
-          </Text>
-        </Text>
-      </View>
+      <View className="flex-1">{children}</View>
     </Pressable>
   );
 };

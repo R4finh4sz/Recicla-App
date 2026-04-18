@@ -118,10 +118,15 @@ export const SignupStep5 = ({
             render={({ field: { onChange, value } }) => (
               <Checkbox
                 checked={value}
-                linkText="Termos de Uso e Política de Privacidade"
-                onLinkPress={() => {}}
                 onToggle={onChange}
-              />
+              >
+                <Text className="font-poppins_regular text-base text-neutral-100">
+                  Li e concordo com os{' '}
+                  <Text className="font-poppins_regular text-base text-[#FF9D00]">
+                    Termos de Uso e Política de Privacidade
+                  </Text>
+                </Text>
+              </Checkbox>
             )}
           />
         </View>
