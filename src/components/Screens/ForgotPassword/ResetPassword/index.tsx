@@ -49,11 +49,11 @@ const ForgotPasswordReset = ({ onSubmit, onBack }: Props) => {
         <BackButton Onpress={onBack} Title="Voltar" />
 
         <View className="pt-12">
-          <Text className="text-center font-montserrat_bold text-[22px] leading-[30px] text-primary-100">
+          <Text className="text-center font-poppins_bold text-[22px] leading-[30px] text-primary-100">
             Cadastre a nova{'\n'}senha
           </Text>
 
-          <Text className="mb-6 mt-4 text-center font-montserrat_regular text-sm leading-[22px] text-[#868686]">
+          <Text className="mb-6 mt-4 text-center font-poppins_regular text-sm leading-[22px] text-[#868686]">
             Crie uma nova senha segura para acessar sua conta. Certifique-se de
             que ela atenda aos requisitos abaixo e confirme para continuar.
           </Text>
@@ -75,7 +75,7 @@ const ForgotPasswordReset = ({ onSubmit, onBack }: Props) => {
                   className={`h-2 w-2 rounded-full ${rule.isValid ? 'bg-primary-100' : 'bg-[#E33B32]'}`}
                 />
 
-                <Text className="font-montserrat_regular text-xs text-[#333333]">
+                <Text className="font-poppins_regular text-xs text-[#333333]">
                   {rule.label}
                 </Text>
               </View>

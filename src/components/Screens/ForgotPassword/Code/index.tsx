@@ -94,11 +94,11 @@ const ForgotPasswordCode = ({ onSubmit, onResend, onBack }: Props) => {
         <BackButton Onpress={onBack} Title="Voltar" />
 
         <View className="items-center pt-12">
-          <Text className="font-montserrat_bold text-lg text-primary-100">
+          <Text className="font-poppins_bold text-lg text-primary-100">
             Digite seu código
           </Text>
 
-          <Text className="mb-6 mt-2 text-center font-montserrat_regular text-sm text-[#616161]">
+          <Text className="mb-6 mt-2 text-center font-poppins_regular text-sm text-[#616161]">
             Insira o código que enviamos para o seu e-mail para continuar a
             redefinição da sua senha.
           </Text>
@@ -118,7 +118,7 @@ const ForgotPasswordCode = ({ onSubmit, onResend, onBack }: Props) => {
               keyboardType="number-pad"
               maxLength={1}
               style={{
-                fontFamily: fontFamily.montserrat_bold,
+                fontFamily: fontFamily.poppins_bold,
                 color: colors.primary[100],
               }}
               value={digit}
@@ -134,13 +134,13 @@ const ForgotPasswordCode = ({ onSubmit, onResend, onBack }: Props) => {
           <ClockIcon />
 
           {seconds === 0 ? (
-            <Text className="font-montserrat_regular text-sm text-[#616161]">
+            <Text className="font-poppins_regular text-sm text-[#616161]">
               Código expirado, solicite um novo abaixo
             </Text>
           ) : (
-            <Text className="font-montserrat_regular text-sm text-[#616161]">
+            <Text className="font-poppins_regular text-sm text-[#616161]">
               Código expira em{' '}
-              <Text className="font-montserrat_bold text-primary-100">
+              <Text className="font-poppins_bold text-primary-100">
                 {formatTime(seconds)}
               </Text>
             </Text>
@@ -148,10 +148,10 @@ const ForgotPasswordCode = ({ onSubmit, onResend, onBack }: Props) => {
         </View>
 
         <View className="mt-10 items-center">
-          <Text className="font-montserrat_regular text-sm text-[#616161]">
+          <Text className="font-poppins_regular text-sm text-[#616161]">
             Não recebeu o código?{' '}
             <Text
-              className="font-montserrat_bold text-primary-100"
+              className="font-poppins_bold text-primary-100"
               style={isResendDisabled ? { opacity: 0.5 } : undefined}
               onPress={handleResend}
             >

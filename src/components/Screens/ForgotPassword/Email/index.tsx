@@ -23,11 +23,11 @@ const ForgotPasswordEmail = ({ control, onSubmit }: Props) => {
         <BackButton Title="Voltar" />
 
         <View className="items-center pt-12">
-          <Text className="font-montserrat_bold text-lg text-primary-100">
+          <Text className="font-poppins_bold text-lg text-primary-100">
             Esqueceu sua senha?
           </Text>
 
-          <Text className="mb-6 mt-2 text-center font-montserrat_regular text-sm text-[#616161]">
+          <Text className="mb-6 mt-2 text-center font-poppins_regular text-sm text-[#616161]">
             Não se preocupe. Informe seu e-mail e enviaremos as instruções para
             redefinir sua senha.
           </Text>
