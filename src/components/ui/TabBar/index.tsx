@@ -5,22 +5,14 @@ import { View } from 'react-native';
 import Pressable from '../Pressable';
 import { TabBarIcon } from '../TabBarIcon';
 
-const TAB_STACKS = [
-  'Relatorio',
-  'ColetaDeFornecedor',
-  'ColetaDeEntregue',
-  'ComprovanteDeDespesas',
-  'Configuracoes',
-] as const;
+const TAB_STACKS = ['Home', 'Shop', 'Profile'] as const;
 
 export type ITab = (typeof TAB_STACKS)[number];
 
 const PATHS: Record<ITab, string> = {
-  Relatorio: '/(main)/DevelopmentReport',
-  ColetaDeFornecedor: '/(main)/CollectMaterial',
-  ColetaDeEntregue: '/(main)/home',
-  ComprovanteDeDespesas: '/(main)/AvailableOrders',
-  Configuracoes: '/(main)/Settings',
+  Home: '/(main)/home',
+  Shop: '/(main)/shop',
+  Profile: '/(main)/profile',
 };
 
 const stripGroups = (path: string) => path.replace(/\/\([^/]+\)/g, '');
@@ -39,7 +31,7 @@ const NavBar = () => {
       return current === target || current.startsWith(`${target}/`);
     });
 
-    return found ?? 'ColetaDeEntregue';
+    return found ?? 'Home';
   }, [pathname]);
 
   const handleNavigate = (routeName: ITab) => {
@@ -56,17 +48,16 @@ const NavBar = () => {
   };
 
   return (
-    <View className="w-full border-t border-[#E7F4D6] bg-white shadow-lg">
-      <View className="w-full flex-row items-center justify-around px-4 py-2">
+    <View
+      className="w-full rounded-t-[40px] bg-[#006414] shadow-lg"
+      style={{ paddingBottom: 15 }}
+    >
+      <View className="w-full flex-row items-center justify-around px-4 pt-4">
         {TAB_STACKS.map(route => {
           const isFocused = activeTab === route;
-          const isCenter = route === 'ColetaDeEntregue';
 
           return (
-            <View
-              key={route}
-              className={`items-center justify-center ${isCenter ? '-mt-5' : ''}`}
-            >
+            <View key={route} className="items-center justify-center">
               <Pressable onPress={() => handleNavigate(route)}>
                 <TabBarIcon isFocused={isFocused} route={route} />
               </Pressable>
