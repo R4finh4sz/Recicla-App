@@ -8,7 +8,7 @@ import Pressable from '../Pressable';
 export type TIcon = keyof typeof IconAssets;
 
 export type IconProps = {
-  name: TIcon;
+  name?: TIcon;
   size?: number;
   style?: ViewStyle;
   color?: string;
@@ -17,16 +17,8 @@ export type IconProps = {
   fill?: string;
   onPress?: () => void;
   pressableProps?: Omit<PressableProps, 'onPress' | 'children' | 'className'>;
+  LucideIcon?: any;
 };
-
-/**
- * Default:
- * ```
- * size: 24
- * color: colors.neutral[100]
- * strokeWidth: 2
- * ```
- */
 
 const Icon = ({
   name,
@@ -40,9 +32,25 @@ const Icon = ({
   pressableProps = {
     style: { padding: 4, margin: -4 },
   },
+  LucideIcon,
 }: IconProps) => {
   const renderIcon = () => {
-    return IconAssets[name]({
+    if (LucideIcon) {
+      return (
+        <LucideIcon
+          color={color}
+          size={size}
+          strokeWidth={strokeWidth}
+          style={style}
+        />
+      );
+    }
+
+    if (!name) {
+      return null;
+    }
+
+    return IconAssets[name as TIcon]({
       width: size,
       height: size,
       color,

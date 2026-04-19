@@ -97,17 +97,17 @@ export const AuthProvider = ({
   };
 
   const logout = async (isDelete = true) => {
-    setUser(null);
-
-    if (isDelete) {
-      try {
+    try {
+      if (isDelete) {
         await deleteItemAsync('accessToken');
-      } catch (error) {
-        console.error('Erro ao deletar tokens:', error);
       }
+    } catch (error) {
+      console.error('Erro ao deletar tokens:', error);
+    } finally {
+      queryClient.clear();
+      setUser(null);
+      router.replace('/(auth)/login');
     }
-
-    queryClient.clear();
   };
 
   const acceptTerms = () => {

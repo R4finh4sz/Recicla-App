@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,8 +13,9 @@ import { useErrorModal } from '@/store/errorModalStore';
 import { LoginForm, LoginSchema } from '@/validation/login.validation';
 
 const Login = () => {
-  const { login, logout } = useAuth();
+  const { login } = useAuth();
   const router = useRouter();
+  const { animateLogo } = useLocalSearchParams<{ animateLogo?: string }>();
   const { openErrorModal } = useErrorModal();
   const insets = useSafeAreaInsets();
 
@@ -27,10 +27,6 @@ const Login = () => {
       rememberMe: false,
     },
   });
-
-  useEffect(() => {
-    logout();
-  }, []);
 
   const onSubmit: SubmitHandler<LoginForm> = async data => {
     try {
@@ -57,7 +53,7 @@ const Login = () => {
         }}
         keyboardShouldPersistTaps="handled"
       >
-        <LoginHeader />
+        <LoginHeader shouldAnimate={animateLogo === '1'} />
 
         <View className="px-4">
           <LoginIntro />

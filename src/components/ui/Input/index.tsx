@@ -39,6 +39,7 @@ type Props<TFieldValues extends FieldValues> = {
   minHeight?: number;
   containerProps?: AnimatedProps<ViewProps>;
   icon?: IconProps;
+  leftIcon?: IconProps;
   suffix?: string;
   unit?: string;
 } & TextInputProps &
@@ -56,6 +57,7 @@ const Input = <TFieldValues extends FieldValues>({
   minHeight,
   containerProps,
   icon,
+  leftIcon,
   multiline,
   maxLength,
   suffix,
@@ -176,6 +178,7 @@ const Input = <TFieldValues extends FieldValues>({
     fontSize: 16,
     color: colors.neutral[80],
     paddingRight: isPassword || icon ? 44 : undefined,
+    paddingLeft: leftIcon ? 44 : 10,
   };
 
   const commonProps: TextInputProps = {
@@ -211,6 +214,12 @@ const Input = <TFieldValues extends FieldValues>({
           className="w-full flex-row items-center rounded-lg border border-[#d1d0d0] bg-white"
           style={{ minHeight }}
         >
+          {leftIcon && (
+            <View className="absolute left-2 self-center">
+              <Icon {...leftIcon} />
+            </View>
+          )}
+
           {type ? (
             <TextInputMask
               options={options}

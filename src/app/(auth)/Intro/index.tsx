@@ -20,7 +20,7 @@ const IntroScreen = () => {
       if (user) {
         router.replace('/(main)/home');
       } else {
-        router.replace('/(auth)/login');
+        router.replace('/(auth)/login?animateLogo=1');
       }
     }, 800);
   };
@@ -37,7 +37,7 @@ const IntroScreen = () => {
       />
 
       <Animated.View
-        className="h-full w-full items-center justify-center"
+        className="items-center justify-center"
         entering={FadeIn.delay(1500)
           .duration(1200)
           .withCallback(finished => {

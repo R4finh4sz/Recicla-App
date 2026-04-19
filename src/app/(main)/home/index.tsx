@@ -10,6 +10,7 @@ import { OTPModal } from '@/components/Screens/Home/Modais/OTPModal';
 import { RecentTransactions } from '@/components/Screens/Home/RecentTransactions';
 import { WalletCard } from '@/components/Screens/Home/WalletCard';
 import { Container, Header, Pressable } from '@/components/ui';
+import NavBar from '@/components/ui/TabBar';
 import { useAuth } from '@/contexts/useAuth';
 
 const Home = () => {
@@ -65,6 +66,8 @@ const Home = () => {
             </View>
           </View>
         </ScrollView>
+
+        <NavBar />
       </Container>
 
       <OTPModal visible={showOTP} onConfirm={handleOTPConfirm} />
