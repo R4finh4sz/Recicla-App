@@ -10,6 +10,7 @@ export { default as Input } from './Input';
 export { default as KeyboardAwareScrollView } from './KeyboardAwareScrollView';
 export { default as ErrorModal } from './Modais/ErrorModal';
 export { default as ModalBackdrop } from './Modais/ModalBackdrop';
+export { default as OTPModal } from './Modais/OTPModal';
 export { default as Pressable } from './Pressable';
 export * from './ProfilePhotoPicker';
 export { default as Shimmer } from './Shimmer';

@@ -1,4 +1,7 @@
-import { TLoginResponse } from '@/types/user';
+import {
+  TLoginTwoFactorResponse,
+  TVerifyCodeResponse,
+} from '@/types/user';
 import { LoginForm } from '@/validation/login.validation';
 
 import { http } from '../http';
@@ -38,21 +41,31 @@ export type TActiveTermsResponse = {
 
 export const authService = {
   login: async (form: LoginForm) => {
-    // const { data } = await http.post<TLoginResponse>(
-    //   `/api/auth/municipe/login`,
-    //   form,
-    // );
-    // return data;
+    const { data } = await http.post<TLoginTwoFactorResponse>(
+      `/auth/local`,
+      form,
+    );
+    return data;
+  },
 
-    // --- MOCK ---
-    return {
-      accessToken: 'mock-token',
-      user: {
-        id: 1,
-        documentId: 'mock-doc-id',
-        name: 'Usuário Mock',
-      },
-    } as any;
+  verifyCode: async (payload: {
+    email: string;
+    code: string;
+    challengeId: string;
+  }) => {
+    const { data } = await http.post<TVerifyCodeResponse>(
+      `/auth/local/verify-code`,
+      payload,
+    );
+    return data;
+  },
+
+  resendCode: async (payload: { email: string; challengeId: string }) => {
+    const { data } = await http.post<TLoginTwoFactorResponse>(
+      `/auth/local/resend-code`,
+      payload,
+    );
+    return data;
   },
 
   registerMunicipe: async (form: RegisterMunicipeForm) => {
@@ -83,7 +96,7 @@ export const authService = {
   },
 
   refreshAccessToken: async (refreshToken: string) => {
-    const { data } = await http.post<TLoginResponse>(
+    const { data } = await http.post<{ accessToken: string }>(
       `/api/auth/refresh-token`,
       {
         refreshToken,

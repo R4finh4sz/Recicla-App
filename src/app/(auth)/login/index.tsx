@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,7 +14,6 @@ import { LoginForm, LoginSchema } from '@/validation/login.validation';
 
 const Login = () => {
   const { login } = useAuth();
-  const router = useRouter();
   const { animateLogo } = useLocalSearchParams<{ animateLogo?: string }>();
   const { openErrorModal } = useErrorModal();
   const insets = useSafeAreaInsets();
@@ -23,7 +22,7 @@ const Login = () => {
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: __DEV__ ? 'spgustavorisio@gmail.com' : '',
-      password: __DEV__ ? 'Senha@1234' : '',
+      password: __DEV__ ? 'Teste@123' : '',
       rememberMe: false,
     },
   });
@@ -31,14 +30,19 @@ const Login = () => {
   const onSubmit: SubmitHandler<LoginForm> = async data => {
     try {
       await login(data);
-      router.replace('/(main)/home');
-    } catch {
-      openErrorModal({
-        title: 'Dados incorretos',
-        message:
-          'E-mail ou senha incorretos.\nVerifique os dados informados e tente novamente.',
-        buttonText: 'Tentar novamente',
-      });
+      // Se o 2FA foi disparado, o modal OTP já foi aberto pelo contexto.
+      // Se não há 2FA, a navegação para home acontece via useEffect do contexto.
+    } catch (error: any) {
+      // O erro de "Role não permitida" já abre o ErrorModal internamente no contexto.
+      // Aqui capturamos apenas outros erros de rede/credenciais.
+      if (error?.message !== 'Role não permitida') {
+        openErrorModal({
+          title: 'Dados incorretos',
+          message:
+            'E-mail ou senha incorretos.\nVerifique os dados informados e tente novamente.',
+          buttonText: 'Tentar novamente',
+        });
+      }
     }
   };
 

@@ -20,3 +20,31 @@ export type TUser = {
   documentId: string;
   name: string;
 };
+
+export type TLoginTwoFactorResponse = {
+  data: {
+    requiresTwoFactor: boolean;
+    challengeId: string;
+    expiresAt: string;
+    rememberMe: boolean;
+    user: {
+      role: {
+        id: number;
+      };
+    };
+    accessToken?: string;
+    token?: string;
+    jwt?: string;
+  };
+  message: string;
+};
+
+export type TVerifyCodeResponse = {
+  data: {
+    accessToken?: string;
+    token?: string;
+    jwt?: string;
+    user?: TLoginUser;
+  };
+  message?: string;
+};

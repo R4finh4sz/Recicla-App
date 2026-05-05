@@ -9,8 +9,13 @@ import {
   useState,
 } from 'react';
 
+import { authService } from '@/services/api/auth';
+import { useErrorModal } from '@/store/errorModalStore';
+import { useOTPModal } from '@/store/otpModalStore';
 import { TUser } from '@/types/user';
 import { LoginForm } from '@/validation/login.validation';
+
+const ALLOWED_ROLE_ID = 3;
 
 type ContextValues = {
   user: TUser | null;
@@ -18,6 +23,15 @@ type ContextValues = {
   logout: (isDelete?: boolean) => Promise<void>;
   acceptTerms: () => void;
   loading: boolean;
+  completeLogin: (payload: {
+    email: string;
+    code: string;
+    challengeId: string;
+  }) => Promise<void>;
+  resendOTPCode: (payload: {
+    email: string;
+    challengeId: string;
+  }) => Promise<void>;
 };
 
 type Props = {
@@ -32,6 +46,8 @@ export const AuthProvider = ({
 }: PropsWithChildren<Props>) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { openErrorModal } = useErrorModal();
+  const { openOTPModal, closeOTPModal } = useOTPModal();
 
   const [user, setUser] = useState<TUser | null>(null);
   const [loading, setLoading] = useState(true);
@@ -48,52 +64,100 @@ export const AuthProvider = ({
     };
   };
 
-  const getLoginPayload = (payload: unknown): Record<string, unknown> => {
-    const response = (payload || {}) as Record<string, unknown>;
-    const nestedData = response.data;
-
-    if (nestedData && typeof nestedData === 'object') {
-      return nestedData as Record<string, unknown>;
-    }
-
-    return response;
-  };
-
-  const getAccessToken = (payload: unknown): string => {
-    const data = (payload || {}) as Record<string, unknown>;
-    const token = data.accessToken || data.jwt || data.token;
-
+  const getAccessToken = (payload: Record<string, unknown>): string => {
+    const token = payload.accessToken || payload.jwt || payload.token;
     return typeof token === 'string' ? token : '';
   };
 
   const login = async (form: LoginForm) => {
-    // const response = await authService.login(form);
-    // const payload = getLoginPayload(response);
+    const response = await authService.login(form);
+    const responseData = response?.data ?? (response as any);
 
-    // const accessToken = getAccessToken(payload);
+    // Verifica se o usuário tem a role permitida
+    const roleId = responseData?.user?.role?.id;
+    if (roleId !== ALLOWED_ROLE_ID) {
+      openErrorModal({
+        title: 'Acesso negado',
+        message:
+          'Seu perfil não tem permissão para acessar este aplicativo.\nApenas usuários autorizados podem entrar.',
+        buttonText: 'Entendi',
+      });
+      throw new Error('Role não permitida');
+    }
 
-    // if (!accessToken) {
-    //   throw new Error('Token de acesso não retornado pela API');
-    // }
+    // Se requer 2FA, abre o modal OTP
+    if (responseData?.requiresTwoFactor) {
+      openOTPModal({
+        visible: true,
+        email: form.email,
+        challengeId: responseData.challengeId,
+      });
+      return;
+    }
 
-    // await setItemAsync('accessToken', accessToken);
+    // Caso venha accessToken direto (sem 2FA)
+    const accessToken = getAccessToken(responseData);
+    if (!accessToken) {
+      throw new Error('Token de acesso não retornado pela API');
+    }
 
-    // if (payload.user) {
-    //   setUser(mapUser(payload.user));
-    //   return;
-    // }
+    await setItemAsync('accessToken', accessToken);
 
-    // const me = await authService.fetchUser();
-    // setUser(mapUser(me));
+    if (responseData.user) {
+      setUser(mapUser(responseData.user));
+      return;
+    }
 
-    // --- MOCK LOGIN (Temporário) ---
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setUser({
-      id: 1,
-      documentId: 'mock-doc-id',
-      name: 'Usuário Mock',
-    });
-    await setItemAsync('accessToken', 'mock-token');
+    const me = await authService.fetchUser();
+    setUser(mapUser(me));
+  };
+
+  /**
+   * Chamado após a confirmação do código OTP
+   */
+  const completeLogin = async (payload: {
+    email: string;
+    code: string;
+    challengeId: string;
+  }) => {
+    const response = await authService.verifyCode(payload);
+    const responseData = response?.data ?? (response as any);
+
+    const accessToken = getAccessToken(responseData);
+    if (!accessToken) {
+      throw new Error('Token de acesso não retornado após verificação do código');
+    }
+
+    await setItemAsync('accessToken', accessToken);
+    closeOTPModal();
+
+    if (responseData.user) {
+      setUser(mapUser(responseData.user));
+      return;
+    }
+
+    const me = await authService.fetchUser();
+    setUser(mapUser(me));
+  };
+
+  /**
+   * Reenvia o código OTP para o e-mail do usuário
+   */
+  const resendOTPCode = async (payload: {
+    email: string;
+    challengeId: string;
+  }) => {
+    const response = await authService.resendCode(payload);
+    const responseData = response?.data ?? (response as any);
+
+    // Atualiza o challengeId no store caso ele mude no reenvio
+    if (responseData?.challengeId) {
+      openOTPModal({
+        visible: true,
+        email: payload.email,
+        challengeId: responseData.challengeId,
+      });
+    }
   };
 
   const logout = async (isDelete = true) => {
@@ -134,6 +198,8 @@ export const AuthProvider = ({
         logout,
         acceptTerms,
         loading,
+        completeLogin,
+        resendOTPCode,
       }}
     >
       {children}

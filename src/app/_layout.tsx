@@ -32,7 +32,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast, { ErrorToast, ToastConfig } from 'react-native-toast-message';
 
-import { DefaultModal, ErrorModal } from '@/components/ui';
+import { DefaultModal, ErrorModal, OTPModal } from '@/components/ui';
 import { DropdownProvider } from '@/contexts/common/Dropdown';
 import { AuthProvider, useAuth } from '@/contexts/useAuth';
 import { colors } from '@/global/colors';
@@ -142,6 +142,8 @@ const RootLayout = () => {
                   <DefaultModal />
 
                   <ErrorModal />
+
+                  <OTPModal />
 
                   <Toast config={toastConfig} />
                 </DropdownProvider>
