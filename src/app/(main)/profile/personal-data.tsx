@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import {
-  AtSign,
   Calendar,
   ChevronRight,
   Mail,
@@ -44,7 +43,6 @@ const PersonalData = () => {
     resolver: zodResolver(PersonalDataSchema),
     defaultValues: {
       fullName: user?.name || 'João Silva',
-      username: 'joaosilva',
       email: 'joao.silva@email.com',
       phone: '+55 (11) 98765-4321',
       birthDate: '15/03/1995',
@@ -104,23 +102,6 @@ const PersonalData = () => {
               color: colors.primary[100],
               size: 18,
             }}
-            label="Nome de Usuário"
-            leftIcon={{
-              LucideIcon: AtSign,
-              color: colors.neutral[60],
-              size: 20,
-            }}
-            name="username"
-            placeholder="joaosilva"
-          />
-
-          <Input
-            control={control}
-            icon={{
-              name: 'WhitePencilIcon' as any,
-              color: colors.primary[100],
-              size: 18,
-            }}
             keyboardType="email-address"
             label="E-mail"
             leftIcon={{ LucideIcon: Mail, color: colors.neutral[60], size: 20 }}
@@ -147,9 +128,7 @@ const PersonalData = () => {
           />
 
           <Input
-            containerProps={{ style: { opacity: 0.8 } }}
             control={control}
-            editable={false}
             label="Data de Nascimento"
             leftIcon={{
               LucideIcon: Calendar,
@@ -157,9 +136,11 @@ const PersonalData = () => {
               size: 20,
             }}
             name="birthDate"
-            options={{ format: 'DD/MM/YYYY' }}
+            options={{
+              mask: '99/99/9999',
+            }}
             placeholder="15/03/1995"
-            type="datetime"
+            type="custom"
           />
 
           <View className="mt-4 rounded-2xl border border-red-50 bg-white p-4 shadow-sm">

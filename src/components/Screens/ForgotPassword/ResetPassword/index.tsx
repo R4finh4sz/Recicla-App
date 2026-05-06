@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Input } from '@/components/ui';
 import { BackButton } from '@/components/ui/BackButton';
@@ -11,11 +12,12 @@ import {
 } from '@/validation/reset_password.validation';
 
 type Props = {
+  isSubmitting?: boolean;
   onSubmit: (data: ResetPasswordForm) => void;
   onBack: () => void;
 };
 
-const ForgotPasswordReset = ({ onSubmit, onBack }: Props) => {
+const ForgotPasswordReset = ({ isSubmitting, onSubmit, onBack }: Props) => {
   const { control, handleSubmit, watch } = useForm<ResetPasswordForm>({
     resolver: zodResolver(ResetPasswordSchema),
     defaultValues: { password: '', confirmPassword: '' },
@@ -23,6 +25,7 @@ const ForgotPasswordReset = ({ onSubmit, onBack }: Props) => {
   });
 
   const password = watch('password') || '';
+  const insets = useSafeAreaInsets();
 
   const rules = [
     { label: 'Pelo menos 8 caracteres', isValid: password.length >= 8 },
@@ -46,7 +49,9 @@ const ForgotPasswordReset = ({ onSubmit, onBack }: Props) => {
         contentContainerClassName="p-5 pt-4"
         contentContainerStyle={{ flexGrow: 1 }}
       >
-        <BackButton Onpress={onBack} Title="Voltar" />
+        <View style={{ paddingTop: insets.top }}>
+          <BackButton Onpress={onBack} Title="Voltar" />
+        </View>
 
         <View className="pt-12">
           <Text className="text-center font-poppins_bold text-[22px] leading-[30px] text-primary-100">
@@ -94,7 +99,8 @@ const ForgotPasswordReset = ({ onSubmit, onBack }: Props) => {
 
       <View className="p-5 pt-0">
         <Button
-          disabled={!isValidForm}
+          disabled={!isValidForm || isSubmitting}
+          isLoading={isSubmitting}
           layout={undefined}
           text="Enviar"
           onPress={handleSubmit(onSubmit)}

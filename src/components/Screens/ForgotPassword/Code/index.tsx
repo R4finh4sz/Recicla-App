@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ClockIcon } from '@/assets/icons';
 import { Button } from '@/components/ui';
@@ -14,12 +15,18 @@ const TIMER_SECONDS = 300;
 const RESEND_COOLDOWN = 30;
 
 type Props = {
+  isSubmitting?: boolean;
   onSubmit: (code: string) => void;
   onResend: () => void;
   onBack: () => void;
 };
 
-const ForgotPasswordCode = ({ onSubmit, onResend, onBack }: Props) => {
+const ForgotPasswordCode = ({
+  isSubmitting,
+  onSubmit,
+  onResend,
+  onBack,
+}: Props) => {
   const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(''));
   const [seconds, setSeconds] = useState(TIMER_SECONDS);
   const [resendCooldown, setResendCooldown] = useState(0);
@@ -84,6 +91,7 @@ const ForgotPasswordCode = ({ onSubmit, onResend, onBack }: Props) => {
 
   const isFilled = (index: number) => code[index] !== '';
   const isResendDisabled = resendCooldown > 0;
+  const insets = useSafeAreaInsets();
 
   return (
     <View className="flex-1 bg-white">
@@ -91,7 +99,9 @@ const ForgotPasswordCode = ({ onSubmit, onResend, onBack }: Props) => {
         contentContainerClassName="p-5 pt-4 pb-0"
         contentContainerStyle={{ flexGrow: 1 }}
       >
-        <BackButton Onpress={onBack} Title="Voltar" />
+        <View style={{ paddingTop: insets.top }}>
+          <BackButton Onpress={onBack} Title="Voltar" />
+        </View>
 
         <View className="items-center pt-12">
           <Text className="font-poppins_bold text-lg text-primary-100">
@@ -163,7 +173,8 @@ const ForgotPasswordCode = ({ onSubmit, onResend, onBack }: Props) => {
 
       <View className="p-5 pb-8 pt-5">
         <Button
-          disabled={code.join('').length < CODE_LENGTH}
+          disabled={code.join('').length < CODE_LENGTH || isSubmitting}
+          isLoading={isSubmitting}
           layout={undefined}
           text="Continuar"
           onPress={handleSubmit}

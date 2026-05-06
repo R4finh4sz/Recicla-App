@@ -27,10 +27,10 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Toast, { ErrorToast, ToastConfig } from 'react-native-toast-message';
 
 import { DefaultModal, ErrorModal, OTPModal } from '@/components/ui';
 import { DropdownProvider } from '@/contexts/common/Dropdown';
@@ -43,10 +43,6 @@ import { handleError } from '@/utils/handleError';
 export { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 setDefaultOptions({ locale: ptBR });
-
-const toastConfig: ToastConfig = {
-  error: props => <ErrorToast {...props} text1NumberOfLines={2} />,
-};
 
 SplashScreen.preventAutoHideAsync();
 
@@ -121,6 +117,12 @@ const RootLayout = () => {
 
   useDropdownRouteReset();
 
+  useEffect(() => {
+    if (isAppReady) {
+      SplashScreen.hideAsync();
+    }
+  }, [isAppReady]);
+
   if (!isAppReady) {
     return null;
   }
@@ -144,8 +146,6 @@ const RootLayout = () => {
                   <ErrorModal />
 
                   <OTPModal />
-
-                  <Toast config={toastConfig} />
                 </DropdownProvider>
               </AuthProvider>
             </SafeAreaProvider>

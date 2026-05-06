@@ -1,4 +1,5 @@
 import { ScrollView, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Image } from '@/components/ui';
 import { BackButton } from '@/components/ui/BackButton';
@@ -9,6 +10,8 @@ type Step1Props = {
 };
 
 export const SignupStep1 = ({ onNext, onBack }: Step1Props) => {
+  const insets = useSafeAreaInsets();
+
   return (
     <ScrollView
       className="flex-1 bg-white px-4"
@@ -16,7 +19,7 @@ export const SignupStep1 = ({ onNext, onBack }: Step1Props) => {
         flexGrow: 1,
       }}
     >
-      <View className="px-4 pt-6">
+      <View className="px-4" style={{ paddingTop: insets.top + 16 }}>
         <BackButton Onpress={onBack} Title="Voltar" />
       </View>
 

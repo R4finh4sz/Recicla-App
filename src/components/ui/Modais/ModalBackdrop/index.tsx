@@ -194,10 +194,10 @@ const ModalBackdrop = ({
             </View>
           )}
 
-          <View className="items-center">
+          <View className="items-center text-center">
             {title && (
               <Text
-                className={`mt-6 text-lg font-semibold text-black ${titleClassName}`}
+                className={`mt-6 text-center text-lg font-semibold text-black ${titleClassName}`}
               >
                 {title}
               </Text>

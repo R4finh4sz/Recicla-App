@@ -1,7 +1,4 @@
-import {
-  TLoginTwoFactorResponse,
-  TVerifyCodeResponse,
-} from '@/types/user';
+import { TLoginTwoFactorResponse, TVerifyCodeResponse } from '@/types/user';
 import { LoginForm } from '@/validation/login.validation';
 
 import { http } from '../http';
@@ -69,15 +66,8 @@ export const authService = {
   },
 
   registerMunicipe: async (form: RegisterMunicipeForm) => {
-    // const { data } = await http.post(`/register/municipes`, form);
-    // console.warn('[AUTH] POST /register/municipes payload:', {
-    //   ...form,
-    // });
-    // return data;
-
-    // --- MOCK ---
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return { status: 'success' };
+    const { data } = await http.post(`/register/municipes`, form);
+    return data;
   },
 
   fetchActiveTerms: async () => {
@@ -88,11 +78,8 @@ export const authService = {
   },
 
   acceptTermsPublic: async () => {
-    // const { data } = await http.patch(`/auth/onboarding/accept-terms/public`);
-    // return data;
-
-    // --- MOCK ---
-    return { status: 'success' };
+    const { data } = await http.patch(`/auth/onboarding/accept-terms/public`);
+    return data;
   },
 
   refreshAccessToken: async (refreshToken: string) => {
@@ -106,14 +93,29 @@ export const authService = {
   },
 
   fetchUser: async () => {
-    // const { data } = await http.get<TUser>(`/api/auth/me`);
-    // return data;
+    const { data } = await http.get(`/api/auth/me`);
+    return data;
+  },
 
-    // --- MOCK ---
-    return {
-      id: 1,
-      documentId: 'mock-doc-id',
-      name: 'Usuário Mock',
-    } as any;
+  requestPasswordReset: async (email: string) => {
+    const { data } = await http.post(`/auth/request-password-reset`, { email });
+    return data;
+  },
+
+  validateResetCode: async (payload: { email: string; code: string }) => {
+    const { data } = await http.post<{ resetToken: string }>(
+      `/auth/password-reset/validate-code`,
+      payload,
+    );
+    return data;
+  },
+
+  resetPassword: async (payload: {
+    resetToken: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
+    const { data } = await http.post(`/auth/reset-password`, payload);
+    return data;
   },
 };

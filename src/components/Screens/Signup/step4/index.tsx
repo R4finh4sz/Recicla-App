@@ -46,7 +46,7 @@ export const SignupStep4 = ({ initialData, onNext, onBack }: Step4Props) => {
       className="flex-1 bg-white px-4"
       contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom }}
     >
-      <View className="px-4 pt-4">
+      <View className="px-4" style={{ paddingTop: insets.top + 16 }}>
         <BackButton Onpress={onBack} Title="Voltar" />
       </View>
 

@@ -196,7 +196,6 @@ const OTPModal = () => {
             ) : (
               <Text className="font-poppins_regular text-sm text-[#616161]">
                 Código expira em{' '}
-
                 <Text className="font-poppins_bold text-primary-100">
                   {formatTime(seconds)}
                 </Text>
@@ -207,7 +206,6 @@ const OTPModal = () => {
           <View className="mb-6 items-center">
             <Text className="font-poppins_regular text-sm text-[#616161]">
               Não recebeu o código?{' '}
-
               <Text
                 className="font-poppins_bold text-primary-100"
                 style={isResendDisabled ? { opacity: 0.5 } : undefined}

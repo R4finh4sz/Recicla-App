@@ -46,7 +46,7 @@ export const SignupStep5 = ({
   const termsContent = isPending
     ? 'Carregando termos...'
     : termsData?.data?.content ||
-      'Não foi possível carregar os termos no momento.';
+    'Não foi possível carregar os termos no momento.';
 
   const insets = useSafeAreaInsets();
 
@@ -55,7 +55,7 @@ export const SignupStep5 = ({
       className="flex-1 bg-white px-4"
       contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom }}
     >
-      <View className="px-4 pt-4">
+      <View className="px-4" style={{ paddingTop: insets.top + 16 }}>
         <BackButton Onpress={onBack} Title="Voltar" />
       </View>
 
@@ -116,10 +116,7 @@ export const SignupStep5 = ({
             control={control}
             name="agreesToTerms"
             render={({ field: { onChange, value } }) => (
-              <Checkbox
-                checked={value}
-                onToggle={onChange}
-              >
+              <Checkbox checked={value} onToggle={onChange}>
                 <Text className="font-poppins_regular text-base text-neutral-100">
                   Li e concordo com os{' '}
                   <Text className="font-poppins_regular text-base text-[#FF9D00]">

@@ -1,6 +1,7 @@
 import type { AxiosError } from 'axios';
 import axios from 'axios';
-import Toast from 'react-native-toast-message';
+
+import { useErrorModal } from '@/store/errorModalStore';
 
 const handleCustomErrors = (error: AxiosError<ApiErrorResponse>): string => {
   const errorMessage =
@@ -37,38 +38,37 @@ export const handleError = (
 ): void => {
   // console.log(JSON.stringify(err, null, 2));
 
+  const { openErrorModal } = useErrorModal.getState();
+
   if (axios.isAxiosError(err)) {
-    return Toast.show({
-      type: 'error',
-      text1: handleCustomErrors(err),
+    return openErrorModal({
+      title: 'Erro',
+      message: handleCustomErrors(err),
     });
   }
 
   if (err instanceof Error) {
-    return Toast.show({
-      type: 'error',
-      text1: err.message,
+    return openErrorModal({
+      title: 'Erro',
+      message: err.message,
     });
   }
 
   if (typeof err === 'string') {
-    return Toast.show({
-      type: 'error',
-      text1: err,
+    return openErrorModal({
+      title: 'Erro',
+      message: err,
     });
   }
 
-  return Toast.show({
-    type: 'error',
-    text1: 'Houve um imprevisto, tente novamente mais tarde',
+  return openErrorModal({
+    title: 'Erro',
+    message: 'Houve um imprevisto, tente novamente mais tarde',
   });
 };
 
 export const handleSuccess = (message: string): void => {
-  Toast.show({
-    type: 'success',
-    text1: message,
-  });
+  // Success toast removed as requested
 };
 
 type ApiErrorResponse = {

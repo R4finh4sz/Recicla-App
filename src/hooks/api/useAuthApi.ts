@@ -40,3 +40,21 @@ export const useFetchUser = () => {
     queryFn: authService.fetchUser,
   });
 };
+
+export const useRequestPasswordReset = () => {
+  return useMutation({
+    mutationFn: authService.requestPasswordReset,
+  });
+};
+
+export const useValidateResetCode = () => {
+  return useMutation({
+    mutationFn: authService.validateResetCode,
+  });
+};
+
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: authService.resetPassword,
+  });
+};

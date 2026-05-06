@@ -46,7 +46,7 @@ export const SignupStep2 = ({ initialData, onNext, onBack }: Step2Props) => {
       className="flex-1 bg-white px-4"
       contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom }}
     >
-      <View className="px-4 pt-4">
+      <View className="px-4" style={{ paddingTop: insets.top + 16 }}>
         <BackButton Onpress={onBack} Title="Voltar" />
       </View>
 
@@ -87,8 +87,11 @@ export const SignupStep2 = ({ initialData, onNext, onBack }: Step2Props) => {
             keyboardType="numeric"
             label="Data de Nascimento"
             name="dateofnasciment"
+            options={{
+              mask: '99/99/9999',
+            }}
             placeholder="Digite sua data de nascimento"
-            type="datetime"
+            type="custom"
           />
 
           <Input

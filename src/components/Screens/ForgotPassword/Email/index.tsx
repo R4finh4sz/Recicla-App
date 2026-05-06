@@ -1,5 +1,6 @@
 import { UseFormReturn, useFormState } from 'react-hook-form';
 import { Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Input } from '@/components/ui';
 import { BackButton } from '@/components/ui/BackButton';
@@ -8,11 +9,13 @@ import { ForgotPasswordEmailForm } from '@/validation/forgot_password.validation
 
 type Props = {
   control: UseFormReturn<ForgotPasswordEmailForm>['control'];
+  isSubmitting?: boolean;
   onSubmit: () => void;
 };
 
-const ForgotPasswordEmail = ({ control, onSubmit }: Props) => {
+const ForgotPasswordEmail = ({ control, isSubmitting, onSubmit }: Props) => {
   const { isValid } = useFormState({ control });
+  const insets = useSafeAreaInsets();
 
   return (
     <View className="flex-1 bg-white">
@@ -20,7 +23,9 @@ const ForgotPasswordEmail = ({ control, onSubmit }: Props) => {
         contentContainerClassName="p-5 pt-4 pb-0"
         contentContainerStyle={{ flexGrow: 1 }}
       >
-        <BackButton Title="Voltar" />
+        <View style={{ paddingTop: insets.top }}>
+          <BackButton Title="Voltar" />
+        </View>
 
         <View className="items-center pt-12">
           <Text className="font-poppins_bold text-lg text-primary-100">
@@ -44,7 +49,8 @@ const ForgotPasswordEmail = ({ control, onSubmit }: Props) => {
 
       <View className="p-5 pb-8 pt-5">
         <Button
-          disabled={!isValid}
+          disabled={!isValid || isSubmitting}
+          isLoading={isSubmitting}
           layout={undefined}
           text="Continuar"
           onPress={onSubmit}

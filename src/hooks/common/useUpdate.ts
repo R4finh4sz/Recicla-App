@@ -21,6 +21,8 @@ export const useUpdate = () => {
           await Updates.fetchUpdateAsync();
           await Updates.reloadAsync();
         }
+      } catch (error) {
+        console.error('Erro ao verificar atualizações:', error);
       } finally {
         setIsLoadingUpdate(false);
       }

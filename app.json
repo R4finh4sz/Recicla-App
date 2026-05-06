@@ -1,14 +1,15 @@
 {
   "expo": {
     "name": "ReciclaApp",
-    "slug": "ReciclaApp",
+    "slug": "reciclaapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/expo/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "light",
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/fe9ad825-2fe0-4158-98ac-ccc459f05901"
     },
     "ios": {
       "supportsTablet": false
@@ -46,8 +47,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "be923852-af0e-4b7f-a45b-bd65d2106b7e"
+        "projectId": "fe9ad825-2fe0-4158-98ac-ccc459f05901"
       }
-    }
+    },
+    "owner": "r4finh4sz"
   }
 }
