@@ -1,22 +1,24 @@
+import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Modal, Text, TextInput, View } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { ActivityIndicator, Text, TextInput, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { ClockIcon } from '@/assets/icons';
-import { Button } from '@/components/ui';
+import { Button, Header, KeyboardAwareScrollView } from '@/components/ui';
 import { useAuth } from '@/contexts/useAuth';
 import { colors } from '@/global/colors';
 import { fontFamily } from '@/global/fontFamily';
 import { useErrorModal } from '@/store/errorModalStore';
-import { useOTPModal } from '@/store/otpModalStore';
+import { useOTPStore } from '@/store/otpStore';
 import { formatTime } from '@/utils/format';
 
 const CODE_LENGTH = 6;
 const TIMER_SECONDS = 300;
 const RESEND_COOLDOWN = 30;
 
-const OTPModal = () => {
-  const { otpModal } = useOTPModal();
+const OTPScreen = () => {
+  const router = useRouter();
+  const { otpData } = useOTPStore();
   const { completeLogin, resendOTPCode } = useAuth();
   const { openErrorModal } = useErrorModal();
 
@@ -26,18 +28,14 @@ const OTPModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
-  const visible = !!otpModal?.visible;
-
   useEffect(() => {
-    if (visible) {
-      setCode(Array(CODE_LENGTH).fill(''));
-      setSeconds(TIMER_SECONDS);
-      setResendCooldown(0);
+    if (!otpData) {
+      router.replace('/(auth)/login');
     }
-  }, [visible]);
+  }, [otpData]);
 
   useEffect(() => {
-    if (!visible || seconds <= 0) {
+    if (seconds <= 0) {
       return;
     }
 
@@ -46,7 +44,7 @@ const OTPModal = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [seconds, visible]);
+  }, [seconds]);
 
   useEffect(() => {
     if (resendCooldown <= 0) {
@@ -77,7 +75,7 @@ const OTPModal = () => {
   };
 
   const handleResend = async () => {
-    if (resendCooldown > 0 || !otpModal) {
+    if (resendCooldown > 0 || !otpData) {
       return;
     }
 
@@ -86,12 +84,12 @@ const OTPModal = () => {
       setSeconds(TIMER_SECONDS);
       setCode(Array(CODE_LENGTH).fill(''));
       await resendOTPCode({
-        email: otpModal.email,
-        challengeId: otpModal.challengeId,
+        email: otpData.email,
+        challengeId: otpData.challengeId,
       });
     } catch {
       openErrorModal({
-        title: 'Erro ao reenviar',
+        title: 'Erro!',
         message: 'Não foi possível reenviar o código. Tente novamente.',
         buttonText: 'Tentar novamente',
       });
@@ -100,24 +98,19 @@ const OTPModal = () => {
 
   const handleSubmit = async () => {
     const fullCode = code.join('');
-    if (fullCode.length !== CODE_LENGTH || !otpModal) {
+    if (fullCode.length !== CODE_LENGTH || !otpData) {
       return;
     }
 
     setIsLoading(true);
     try {
       await completeLogin({
-        email: otpModal.email,
+        email: otpData.email,
         code: fullCode,
-        challengeId: otpModal.challengeId,
+        challengeId: otpData.challengeId,
       });
     } catch {
-      openErrorModal({
-        title: 'Código inválido',
-        message:
-          'O código informado é inválido ou expirou.\nVerifique e tente novamente.',
-        buttonText: 'Tentar novamente',
-      });
+      // O erro já é tratado no completeLogin com o ErrorModal
       setCode(Array(CODE_LENGTH).fill(''));
     } finally {
       setIsLoading(false);
@@ -128,39 +121,35 @@ const OTPModal = () => {
   const isResendDisabled = resendCooldown > 0 || seconds <= 0;
   const isSubmitDisabled = code.join('').length < CODE_LENGTH || isLoading;
 
-  if (!visible) {
+  if (!otpData) {
     return null;
   }
 
   return (
-    <Modal
-      statusBarTranslucent
-      transparent
-      animationType="fade"
-      visible={visible}
-      onRequestClose={() => { }}
-    >
-      <Animated.View
-        className="absolute inset-0 flex-1 items-center justify-center bg-black/70"
-        entering={FadeIn}
-        exiting={FadeOut}
-        style={{ flex: 1 }}
+    <View className="flex-1 bg-white">
+      <Header showBackButton title="Verificação" />
+
+      <KeyboardAwareScrollView
+        className="flex-1"
+        contentContainerStyle={{ flexGrow: 1 }}
       >
-        <View className="mx-5 w-[90%] max-w-sm rounded-2xl bg-white px-6 py-8">
-          {/* Header */}
-          <View className="mb-6 items-center">
-            <Text className="font-poppins_bold text-xl text-primary-100">
+        <Animated.View
+          className="flex-1 items-center px-6 pt-10"
+          entering={FadeIn}
+        >
+          <View className="mb-8 items-center">
+            <Text className="text-center font-poppins_bold text-2xl text-primary-100">
               Verificação de segurança
             </Text>
 
-            <Text className="mt-2 text-center font-poppins_regular text-sm text-neutral-80">
+            <Text className="mt-4 text-center font-poppins_regular text-base text-neutral-80">
               Insira o código de 6 dígitos enviado para o seu e-mail para
               continuar.
             </Text>
           </View>
 
           {/* Inputs OTP */}
-          <View className="flex-row justify-center gap-2.5">
+          <View className="flex-row justify-center gap-2">
             {code.map((digit, index) => (
               <TextInput
                 key={index}
@@ -186,7 +175,7 @@ const OTPModal = () => {
             ))}
           </View>
 
-          <View className="mb-6 mt-5 flex-row items-center justify-center gap-1">
+          <View className="mb-8 mt-6 flex-row items-center justify-center gap-2">
             <ClockIcon />
 
             {seconds === 0 ? (
@@ -196,6 +185,7 @@ const OTPModal = () => {
             ) : (
               <Text className="font-poppins_regular text-sm text-[#616161]">
                 Código expira em{' '}
+
                 <Text className="font-poppins_bold text-primary-100">
                   {formatTime(seconds)}
                 </Text>
@@ -203,9 +193,10 @@ const OTPModal = () => {
             )}
           </View>
 
-          <View className="mb-6 items-center">
-            <Text className="font-poppins_regular text-sm text-[#616161]">
+          <View className="mb-10 items-center">
+            <Text className="font-poppins_regular text-base text-[#616161]">
               Não recebeu o código?{' '}
+
               <Text
                 className="font-poppins_bold text-primary-100"
                 style={isResendDisabled ? { opacity: 0.5 } : undefined}
@@ -218,23 +209,24 @@ const OTPModal = () => {
             </Text>
           </View>
 
-          {/* Botão confirmar */}
-          <Button
-            disabled={isSubmitDisabled}
-            layout={undefined}
-            text={
-              isLoading ? (
-                <ActivityIndicator color={colors.white} />
-              ) : (
-                'Confirmar'
-              )
-            }
-            onPress={handleSubmit}
-          />
-        </View>
-      </Animated.View>
-    </Modal>
+          <View className="w-full">
+            <Button
+              disabled={isSubmitDisabled}
+              layout={undefined}
+              text={
+                isLoading ? (
+                  <ActivityIndicator color={colors.white} />
+                ) : (
+                  'Confirmar'
+                )
+              }
+              onPress={handleSubmit}
+            />
+          </View>
+        </Animated.View>
+      </KeyboardAwareScrollView>
+    </View>
   );
 };
 
-export default OTPModal;
+export default OTPScreen;

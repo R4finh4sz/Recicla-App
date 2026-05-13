@@ -32,7 +32,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { DefaultModal, ErrorModal, OTPModal } from '@/components/ui';
+import { DefaultModal, ErrorModal } from '@/components/ui';
 import { DropdownProvider } from '@/contexts/common/Dropdown';
 import { AuthProvider, useAuth } from '@/contexts/useAuth';
 import { colors } from '@/global/colors';
@@ -144,8 +144,6 @@ const RootLayout = () => {
                   <DefaultModal />
 
                   <ErrorModal />
-
-                  <OTPModal />
                 </DropdownProvider>
               </AuthProvider>
             </SafeAreaProvider>

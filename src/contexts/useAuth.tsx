@@ -11,7 +11,7 @@ import {
 
 import { authService } from '@/services/api/auth';
 import { useErrorModal } from '@/store/errorModalStore';
-import { useOTPModal } from '@/store/otpModalStore';
+import { useOTPStore } from '@/store/otpStore';
 import { TUser } from '@/types/user';
 import { LoginForm } from '@/validation/login.validation';
 
@@ -47,7 +47,7 @@ export const AuthProvider = ({
   const router = useRouter();
   const queryClient = useQueryClient();
   const { openErrorModal } = useErrorModal();
-  const { openOTPModal, closeOTPModal } = useOTPModal();
+  const { setOTPData, clearOTPData } = useOTPStore();
 
   const [user, setUser] = useState<TUser | null>(null);
   const [loading, setLoading] = useState(true);
@@ -85,13 +85,13 @@ export const AuthProvider = ({
       throw new Error('Role não permitida');
     }
 
-    // Se requer 2FA, abre o modal OTP
+    // Se requer 2FA, navega para a tela OTP
     if (responseData?.requiresTwoFactor) {
-      openOTPModal({
-        visible: true,
+      setOTPData({
         email: form.email,
         challengeId: responseData.challengeId,
       });
+      router.push('/(auth)/otp');
       return;
     }
 
@@ -120,24 +120,40 @@ export const AuthProvider = ({
     code: string;
     challengeId: string;
   }) => {
-    const response = await authService.verifyCode(payload);
-    const responseData = response?.data ?? (response as any);
+    try {
+      const response = await authService.verifyCode(payload);
+      const responseData = response?.data ?? (response as any);
 
-    const accessToken = getAccessToken(responseData);
-    if (!accessToken) {
-      throw new Error('Token de acesso não retornado após verificação do código');
+      const accessToken = getAccessToken(responseData);
+      if (!accessToken) {
+        throw new Error(
+          'Token de acesso não retornado após verificação do código',
+        );
+      }
+
+      await setItemAsync('accessToken', accessToken);
+      clearOTPData();
+
+      if (responseData.user) {
+        setUser(mapUser(responseData.user));
+        return;
+      }
+
+      const me = await authService.fetchUser();
+      setUser(mapUser(me));
+    } catch (error: any) {
+      const message =
+        error.response?.data?.error?.message ||
+        error.response?.data?.message ||
+        'O código informado é inválido ou expirou.\nVerifique e tente novamente.';
+
+      openErrorModal({
+        title: 'Erro!',
+        message: message,
+        buttonText: 'Tentar novamente',
+      });
+      throw error;
     }
-
-    await setItemAsync('accessToken', accessToken);
-    closeOTPModal();
-
-    if (responseData.user) {
-      setUser(mapUser(responseData.user));
-      return;
-    }
-
-    const me = await authService.fetchUser();
-    setUser(mapUser(me));
   };
 
   /**
@@ -152,8 +168,7 @@ export const AuthProvider = ({
 
     // Atualiza o challengeId no store caso ele mude no reenvio
     if (responseData?.challengeId) {
-      openOTPModal({
-        visible: true,
+      setOTPData({
         email: payload.email,
         challengeId: responseData.challengeId,
       });
