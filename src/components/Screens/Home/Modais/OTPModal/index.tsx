@@ -24,14 +24,22 @@ const styles = StyleSheet.create({
   },
 });
 
+
 export const OTPModal = ({ visible, onClose, onConfirm }: OTPModalProps) => {
   const [code, setCode] = useState('');
   const [dontAskAgain, setDontAskAgain] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<TextInput>(null);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (code.length === 6) {
-      onConfirm(code, dontAskAgain);
+      // onConfirm pode retornar true (sucesso) ou false (erro)
+      const result = await onConfirm(code, dontAskAgain);
+      if (result === false) {
+        setError('Código inválido. Tente novamente.');
+      } else {
+        setError(null);
+      }
     }
   };
 
@@ -76,6 +84,12 @@ export const OTPModal = ({ visible, onClose, onConfirm }: OTPModalProps) => {
           Insira o código que enviamos para o seu e-mail para continuar
         </Text>
 
+        {error && (
+          <Text className="mb-2 text-center text-red-500 font-poppins_medium">
+            {error}
+          </Text>
+        )}
+
         <Pressable
           className="mb-10 w-full flex-row justify-between"
           onPress={() => inputRef.current?.focus()}
@@ -89,7 +103,10 @@ export const OTPModal = ({ visible, onClose, onConfirm }: OTPModalProps) => {
           keyboardType="number-pad"
           style={styles.hiddenInput}
           value={code}
-          onChangeText={v => setCode(v.replace(/[^0-9]/g, '').slice(0, 6))}
+          onChangeText={v => {
+            setCode(v.replace(/[^0-9]/g, '').slice(0, 6));
+            if (error) setError(null);
+          }}
         />
 
         <View className="mb-10 w-full">
